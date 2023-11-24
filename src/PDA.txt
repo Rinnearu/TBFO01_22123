@@ -1,0 +1,43 @@
+start html /html head /head body /body final
+a b c d e f g h i j k l m n o p q r s t u v w x y z < > /
+Z
+start
+final
+F
+start $ Z html <html><head></head><body></body></html>Z
+# $ is epsilon
+# %%%%%%%%% <html> %%%%%%%%% #
+html < < html $
+html h h html $
+html t t html $
+html m m html $
+html l l html $
+html > > head $
+# %%%%%%%%% <head> %%%%%%%%% #
+head < < head $
+head h h head $
+head e e head $
+head a a head $
+head d d head $
+head > > head $
+# %%%%%%%%% <title> & </title> %%%%%%%%% #
+head t / title itle></title></
+title i i title $
+title t t title $
+title l l title $
+title e e title $
+title > > /title $
+/title / / /title $
+/title < < /title $
+/title i i /title $
+/title t t /title $
+/title l l /title $
+/title e e /title $
+/title > > head $
+# %%%%%%%%% </head> %%%%%%%%% #
+head / / /head $
+/head h h /head $
+/head h h /head $
+/head h h /head $
+/head h h /head $
+/head > > body $
