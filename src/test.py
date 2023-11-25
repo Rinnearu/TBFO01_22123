@@ -1,8 +1,27 @@
-# Hashing tuples
-tuple_1 = ('STATE', '<newstuff', '>')
-tuple_2 = ('STATE', '>', '<newstuff')
-tuple_3 = ('STATE', '<newstuff', '>')
+import re
 
-print(hash(tuple_1))  # Output hash value for tuple_1
-print(hash(tuple_2))  # Output hash value for tuple_2
-print(hash(tuple_3))  # Output hash value for tuple_2
+def extract_tags_separately(html_input):
+    # Define a regular expression pattern to match opening, closing, and self-closing HTML tags
+    pattern = r'<[^/>]+>|</[^>]+>|<[^>]+/>'
+
+    # Find all matches of HTML tags in the input
+    tags = re.findall(pattern, html_input)
+
+    return tags
+
+# Example HTML input
+html_input = """
+<html> 
+  <head> 
+    <title>Simple Webpage</title> 
+  </head> 
+  <body> 
+    <h1>Hello, World!</h1> 
+    <p>This is a simple webpage.</p> 
+  </body> 
+</html>
+"""
+
+# Extract tags separately from the HTML input
+extracted_tags = extract_tags_separately(html_input)
+print(extracted_tags)

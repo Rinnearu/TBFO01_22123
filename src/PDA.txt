@@ -1,43 +1,52 @@
-start html /html head /head body /body final
-a b c d e f g h i j k l m n o p q r s t u v w x y z < > /
+START HTML HEAD BODY /HEAD /BODY /HTML FINAL
+> " <html </html <head </head <title </title <link <script </script rel=" href=" src=" id=" class=" style=" <body </body
+Z > " <html </html <head </head <title </title <link <script </script rel=" href=" src=" id=" class=" style=" <body </body
+START
 Z
-start
-final
-F
-start $ Z html <html><head></head><body></body></html>Z
-# $ is epsilon
-# %%%%%%%%% <html> %%%%%%%%% #
-html < < html $
-html h h html $
-html t t html $
-html m m html $
-html l l html $
-html > > head $
-# %%%%%%%%% <head> %%%%%%%%% #
-head < < head $
-head h h head $
-head e e head $
-head a a head $
-head d d head $
-head > > head $
-# %%%%%%%%% <title> & </title> %%%%%%%%% #
-head t / title itle></title></
-title i i title $
-title t t title $
-title l l title $
-title e e title $
-title > > /title $
-/title / / /title $
-/title < < /title $
-/title i i /title $
-/title t t /title $
-/title l l /title $
-/title e e /title $
-/title > > head $
-# %%%%%%%%% </head> %%%%%%%%% #
-head / / /head $
-/head h h /head $
-/head h h /head $
-/head h h /head $
-/head h h /head $
-/head > > body $
+FINAL
+# $ adalah epsilon
+START <html Z HTML ><head></head><body></body></html>Z
+# %%%%%%%%%%%%%%%%%% HTML %%%%%%%%%%%%%%%%%% #
+HTML > > HEAD $
+# %%%%%%%%%%%%%%%%%% HEAD %%%%%%%%%%%%%%%%%% #
+HEAD <head <head HEAD $
+HEAD > > HEAD $
+HEAD " " HEAD $
+# ====== title ====== #
+HEAD <title </head HEAD ><title</head
+HEAD </title <title HEAD </title
+HEAD > </title HEAD $
+# ====== link ====== #
+HEAD <link </head HEAD rel="<link</head
+HEAD rel=" rel=" HEAD "
+HEAD href=" <link HEAD "<link
+HEAD > <link HEAD $
+# ====== script ====== #
+HEAD <script </head HEAD <script<script</head
+HEAD src=" <script HEAD "<script
+HEAD > <script HEAD $
+HEAD </script <script HEAD </script
+HEAD > </script HEAD $
+# ====== global attributes (general) ====== #
+HEAD id=" > HEAD ">
+HEAD class=" > HEAD ">
+HEAD style=" > HEAD ">
+# ====== global attributes (has optional attributes or nest) ====== #
+HEAD id=" <link HEAD "<link
+HEAD class=" <link HEAD "<link
+HEAD style=" <link HEAD "<link
+HEAD id=" <script HEAD "<script
+HEAD class=" <script HEAD "<script
+HEAD style=" <script HEAD "<script
+# %%%%%%%%%%%%%%%%%% /HEAD %%%%%%%%%%%%%%%%%% #
+HEAD </head </head /HEAD $
+/HEAD > > BODY $
+# %%%%%%%%%%%%%%%%%% BODY %%%%%%%%%%%%%%%%%% #
+BODY <body <body BODY $
+BODY > > BODY $
+# %%%%%%%%%%%%%%%%%% /BODY %%%%%%%%%%%%%%%%%% #
+BODY </body </body /BODY $
+/BODY > > /HTML $
+# %%%%%%%%%%%%%%%%%% /HTML %%%%%%%%%%%%%%%%%% #
+/HTML </html </html /HTML $
+/HTML > > FINAL $

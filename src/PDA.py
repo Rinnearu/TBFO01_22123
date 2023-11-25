@@ -4,22 +4,16 @@ class PDA:
         self.input_symbols = set()
         self.stack_symbols = set()
         self.start_state = ''
-        self.stack = []
+        self.start_stack = ''
         self.accept_states = set()
         self.transitions = {}
-
-    def INFOTOP(self):
-        return self.stack[-1]
     
     def add_transition(self, current_state, input_symbol, stack_symbol, next_state, stack_operation):
         key = (current_state, input_symbol, stack_symbol)
         value = (next_state, stack_operation)
 
         if key not in self.transitions:
-            self.transitions[key] = []
-
-        if value not in self.transitions[key]:
-            self.transitions[key].append(value)
+            self.transitions[key] = value
 
     def read_pda(self, filename):
         with open(filename,'r') as file:
@@ -36,11 +30,11 @@ class PDA:
                 elif (i == 3):
                     self.start_state = line.split()[0]
                 elif (i == 4):
-                    self.stack.extend(list(line.split()))
+                    self.start_stack = line
                 else:
                     self.accept_states = set(line.split())
-                line = file.readline().strip()
 
+                line = file.readline().strip()
             while (len(line) > 0):
                 while line[0] == '#':
                     line = file.readline().strip()
@@ -49,5 +43,23 @@ class PDA:
                     self.add_transition(parts[0],parts[1],parts[2],parts[3],parts[4])
                 line = file.readline().strip()
 
-    # def simulate(self, input):
-        
+    def simulate(self, input):
+        stack = list(self.start_stack)
+        current_state = self.start_state
+
+        for input_symbol in input:
+            if (current_state, input_symbol, stack[-1]) in self.transitions:
+                transition = self.transitions[(current_state, input_symbol, stack[-1])]
+                stack.pop()
+                if transition[1] != '$':
+                    current_symbol = ''
+                    for cc in reversed(transition[1]):
+                        current_symbol = cc + current_symbol
+                        if current_symbol in self.stack_symbols:
+                            stack.append(current_symbol)
+                            current_symbol = ''
+                current_state = transition[0]
+            else:
+                return False
+            
+        return True
