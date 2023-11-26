@@ -1,43 +1,52 @@
-import re
-
 class HTML:
     def __init__(self):
+        self.file_name = input("Masukkan nama file HTML: ")
         self.content = []
 
-    def ask_for_file(self):
-        # Meminta pengguna memasukkan path file
-        filename = input("Masukkan path file HTML: ")
-        self.input(filename)
-
-    def input(self, filename):
+    def read_and_process_file(self):
         try:
-            with open(filename, 'r') as file:
+            with open(self.file_name, 'r') as file:
                 data = file.read()
+                #contoh isi data adalah "<html> <head> <title> Ini adalah judul </title> </head> <body> <p> Ini adalah paragraf </p> </body> </html>"
 
-            # Menghapus newline
-            data = data.replace('\n', '')
+            temp = ""
+            in_comment = False
+            for char in data:
+                #contoh isi char adalah "<"
+                if char == '<':
+                    # Menangani teks sebelum tag
+                    if temp:
+                        self.content.extend(temp.split())
+                    temp = char
+                elif char == '>':
+                    temp += char
+                    # Memeriksa apakah 4 char pertama adalah <!--
+                    if temp.startswith('<!--') and temp.endswith('-->'):
+                        self.content.append('<!--')
+                        self.content.append('-->')
+                        temp = ""
+                    else:
+                        # Memproses tag biasa
+                        self.content.append(temp[:-1])
+                        # temp = "<html>"
+                        # maka temp[:-1] = "<html"
+                        self.content.append(temp[-1])
+                        temp = ""
+                else:
+                    temp += char
 
-            # Membuat ekspresi reguler untuk tag yang spesifik
-            tags_pattern = re.compile(
-                r"(<html|</html|<head|</head|<title|</title|<link|<script|</script|"
-                r"rel=\"|href=\"|src=\"|id=\"|class=\"|style=\"|<body|</body)"
-            )
-
-            # Memisahkan data menggunakan ekspresi reguler
-            parts = tags_pattern.split(data)
-            cleaned_parts = [part.strip() for part in parts if part.strip()]
-
-            # Memasukkan hasil split ke dalam list content
-            for part in cleaned_parts:
-              self.content.append(part)
+            # Menangani teks yang tersisa
+            if temp and not in_comment:
+                self.content.extend(temp.split())
 
         except FileNotFoundError:
-            print("File tidak ditemukan. Silakan masukkan path yang valid.")
+            print("File tidak ditemukan. Pastikan path file sudah benar.")
 
     def get_content(self):
         return self.content
 
-# Contoh penggunaan
-html_parser = HTML()
-html_parser.ask_for_file()
-print(html_parser.get_content())
+# Menggunakan class
+html_reader = HTML()
+html_reader.read_and_process_file()
+content = html_reader.get_content()
+print(content)
