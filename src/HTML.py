@@ -11,12 +11,14 @@ class HTML:
 
             temp = ""
             in_comment = False
+            flag_close = False
             for char in data:
                 #contoh isi char adalah "<"
                 if char == '<':
                     # Menangani teks sebelum tag
-                    if temp:
+                    if temp and not flag_close:
                         self.content.extend(temp.split())
+                        flag_close = False
                     temp = char
                 elif char == '>':
                     temp += char
@@ -32,6 +34,7 @@ class HTML:
                         # maka temp[:-1] = "<html"
                         self.content.append(temp[-1])
                         temp = ""
+                    flag_close = True
                 else:
                     temp += char
 
