@@ -1,3 +1,5 @@
+import re
+
 class HTML:
     def __init__(self):
         self.file_name = input("Masukkan nama file HTML: ")
@@ -7,43 +9,49 @@ class HTML:
         try:
             with open(self.file_name, 'r') as file:
                 data = file.read()
-                #contoh isi data adalah "<html> <head> <title> Ini adalah judul </title> </head> <body> <p> Ini adalah paragraf </p> </body> </html>"
 
             temp = ""
             in_comment = False
-            flag_close = False
+            flag_close = False  # Menginisialisasi flag_close
             for char in data:
-                #contoh isi char adalah "<"
                 if char == '<':
-                    # Menangani teks sebelum tag
-                    if temp and not flag_close:
+                    if temp and not in_comment and not flag_close:
                         self.content.extend(temp.split())
-                        flag_close = False
                     temp = char
+                    flag_close = False  # Reset flag ketika menemui '<'
                 elif char == '>':
                     temp += char
-                    # Memeriksa apakah 4 char pertama adalah <!--
                     if temp.startswith('<!--') and temp.endswith('-->'):
                         self.content.append('<!--')
                         self.content.append('-->')
                         temp = ""
                     else:
-                        # Memproses tag biasa
-                        self.content.append(temp[:-1])
-                        # temp = "<html>"
-                        # maka temp[:-1] = "<html"
-                        self.content.append(temp[-1])
+                        if temp.startswith('<link'):
+                            self._process_link_tag(temp)
+                        else:
+                            self.content.append(temp[:-1])
+                            self.content.append(temp[-1])
                         temp = ""
-                    flag_close = True
+                    flag_close = True  # Set flag ketika menemui '>'
                 else:
                     temp += char
 
-            # Menangani teks yang tersisa
-            if temp and not in_comment:
+            if temp and not in_comment and not flag_close:
                 self.content.extend(temp.split())
 
         except FileNotFoundError:
             print("File tidak ditemukan. Pastikan path file sudah benar.")
+
+    def _process_link_tag(self, tag):
+        # Ekstrak atribut dari tag <link>
+        attributes = re.findall(r'(\w+)="([^"]*)"', tag)
+        link_data = ['<link']
+        for attr, value in attributes:
+            link_data.append(attr + '="')
+            link_data.append('"')
+            # link_data.append(value + '"')
+        link_data.append('>')
+        self.content.extend(link_data)
 
     def get_content(self):
         return self.content
