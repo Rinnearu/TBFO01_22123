@@ -14,7 +14,7 @@ class HTML:
             outside_text = ""
             for char in data:
                 if char == '<':
-                    if outside_text.strip():  # Jika ada teks di luar tag
+                    if outside_text.strip():
                         self.content.append('T')
                         outside_text = ""
                     temp = char
@@ -28,7 +28,7 @@ class HTML:
                     else:
                         outside_text += char
 
-            if outside_text.strip():  # Menangani teks yang tersisa
+            if outside_text.strip():
                 self.content.append('T')
 
         except FileNotFoundError:
@@ -40,12 +40,18 @@ class HTML:
             self.content.append('-->')
         else:
             parts = tag[:-1].split(' ', 1)
+            tag_name = parts[0][1:]  # Menghilangkan '<'
             self.content.append(parts[0])
             if len(parts) > 1:
-                attributes = re.findall(r'(\w+)="([^"]*)"', parts[1])
+                attributes = re.findall(r'(\w+)(?:="([^"]*)")?', parts[1])
                 for attr, value in attributes:
                     self.content.append(attr + '="')
-                    self.content.append('T ')  # Mengosongkan nilai atribut
+                    if tag_name == 'form' and attr == 'method':
+                        self.content.append(value)  # Jangan ganti nilai 'method' di tag 'form'
+                    elif (tag_name == 'button' or tag_name == 'input') and attr == 'type':
+                        self.content.append(value)  # Jangan ganti nilai 'type' di tag 'button' dan 'input'
+                    else:
+                        self.content.append('T')
                     self.content.append('"')
             self.content.append('>')
 
