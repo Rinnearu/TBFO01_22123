@@ -1,3 +1,5 @@
+import re
+
 class HTML:
     def __init__(self):
         self.content = []
@@ -9,28 +11,26 @@ class HTML:
 
     def input(self, filename):
         try:
-            # Membaca file
             with open(filename, 'r') as file:
                 data = file.read()
 
-            # Daftar tag yang perlu dipisahkan
-            tags = ["<html", "</html", "<head", "</head", "<title", "</title", "<link", "<script", "</script", 
-                    'rel="', 'href="', 'src="', 'id="', 'class="', 'style="', "<body", "</body"]
+            # Menghapus newline
+            data = data.replace('\n', '')
 
-            # Memproses isi file
-            for tag in tags:
-                data = data.replace(tag, f"\n{tag}\n")
+            # Membuat ekspresi reguler untuk tag yang spesifik
+            tags_pattern = re.compile(
+                r"(<html|</html|<head|</head|<title|</title|<link|<script|</script|"
+                r"rel=\"|href=\"|src=\"|id=\"|class=\"|style=\"|<body|</body)"
+            )
 
-            # Memisahkan berdasarkan baris baru dan menghapus string kosong
-            lines = [line.strip() for line in data.split("\n") if line.strip()]
+            # Memisahkan data menggunakan ekspresi reguler
+            parts = tags_pattern.split(data)
+            cleaned_parts = [part.strip() for part in parts if part.strip()]
 
-            # Memisahkan tag penutup '>'
-            for i, line in enumerate(lines):
-                if line.endswith('>'):
-                    lines[i] = line[:-1]
-                    lines.insert(i + 1, '>')
+            # Memasukkan hasil split ke dalam list content
+            for part in cleaned_parts:
+              self.content.append(part)
 
-            self.content = lines
         except FileNotFoundError:
             print("File tidak ditemukan. Silakan masukkan path yang valid.")
 
