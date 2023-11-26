@@ -49,8 +49,6 @@ class PDA:
         current_state = self.start_state
 
         for input_symbol in input:
-            print(f'{current_state},{input_symbol},{stack[-1]}')
-            print(stack)
             if (current_state, input_symbol, stack[-1]) in self.transitions:
                 transition = self.transitions[(current_state, input_symbol, stack[-1])]
                 stack.pop()

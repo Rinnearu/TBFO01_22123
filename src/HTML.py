@@ -1,8 +1,8 @@
 import re
 
 class HTML:
-    def __init__(self):
-        self.file_name = input("Masukkan nama file HTML: ")
+    def __init__(self, filename):
+        self.file_name = filename
         self.content = []
 
     def read_and_process_file(self):
@@ -59,7 +59,7 @@ class HTML:
         return self.content
 
 # Menggunakan class
-html_reader = HTML()
-html_reader.read_and_process_file()
-content = html_reader.get_content()
-print(content)
+# html_reader = HTML()
+# html_reader.read_and_process_file()
+# content = html_reader.get_content()
+# print(content)

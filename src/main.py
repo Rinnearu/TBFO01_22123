@@ -15,5 +15,15 @@ args = parser.parse_args()
 filename = args.filename
 
 # Your main code here using the 'filename' variable
-print(f"Processing HTML file: {filename}")
+pda = PDA()
+pda.read_pda('PDA.txt')
+
+html_reader = HTML(filename)
+html_reader.read_and_process_file()
+content = html_reader.get_content()
+
+if (pda.simulate(content)):
+    print("Accepted")
+else :
+    print("Syntax error")
 # Use 'filename' to work with the provided HTML file
