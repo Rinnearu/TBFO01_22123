@@ -12,13 +12,27 @@ class HTML:
 
             temp = ""
             in_comment = False
+            head_flag = False
+            body_flag = False
             flag_close = False  # Menginisialisasi flag_close
             for char in data:
+                char = char.replace('\n', '')
+                char = char.replace('\t', '')
+                char = char.strip()
                 if char == '<':
+                    # buat tag comment
                     if temp and not in_comment and not flag_close:
-                        self.content.extend(temp.split())
+                    # rayhan request input gajelas itu dijadiin T
+                        self.content.append('T')
+                    # bilamana ada teks tak ber tag di head atau body
+                    elif temp and (head_flag or body_flag):
+                    # rayhan request input gajelas itu dijadiin T
+                        self.content.append('T')
+                    head_flag = False
+                    body_flag = False
                     temp = char
                     flag_close = False  # Reset flag ketika menemui '<'
+
                 elif char == '>':
                     temp += char
                     if temp.startswith('<!--') and temp.endswith('-->'):
@@ -26,7 +40,15 @@ class HTML:
                         self.content.append('-->')
                         temp = ""
                     else:
-                        if temp.startswith('<link'):
+                        if temp == '<head>':
+                            head_flag = True
+                            self.content.append(temp[:-1])
+                            self.content.append(temp[-1])
+                        elif temp == '<body>':
+                            body_flag = True
+                            self.content.append(temp[:-1])
+                            self.content.append(temp[-1])
+                        elif temp.startswith('<link'):
                             self._process_link_tag(temp)
                         else:
                             self.content.append(temp[:-1])
@@ -35,9 +57,10 @@ class HTML:
                     flag_close = True  # Set flag ketika menemui '>'
                 else:
                     temp += char
-
-            if temp and not in_comment and not flag_close:
-                self.content.extend(temp.split())
+            
+            # kalau ada string di luar html
+            if temp and not in_comment: #and not flag_close
+                self.content.append('T')
 
         except FileNotFoundError:
             print("File tidak ditemukan. Pastikan path file sudah benar.")
