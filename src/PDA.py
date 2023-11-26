@@ -43,23 +43,29 @@ class PDA:
                     self.add_transition(parts[0],parts[1],parts[2],parts[3],parts[4])
                 line = file.readline().strip()
 
+    # ['<html','>','<head','>','</head','>','<body','>','</body','>','</html','>']
     def simulate(self, input):
         stack = list(self.start_stack)
         current_state = self.start_state
 
         for input_symbol in input:
+            print(f'{current_state},{input_symbol},{stack[-1]}')
+            print(stack)
             if (current_state, input_symbol, stack[-1]) in self.transitions:
                 transition = self.transitions[(current_state, input_symbol, stack[-1])]
                 stack.pop()
                 if transition[1] != '$':
                     current_symbol = ''
-                    for cc in reversed(transition[1]):
-                        current_symbol = cc + current_symbol
+                    tempStack = []
+                    for cc in transition[1]:
+                        current_symbol = current_symbol + cc
                         if current_symbol in self.stack_symbols:
-                            stack.append(current_symbol)
+                            tempStack.append(current_symbol)
                             current_symbol = ''
+                    for ps in reversed(tempStack):
+                        stack.append(ps)
                 current_state = transition[0]
             else:
                 return False
             
-        return True
+        return stack[-1] == self.start_stack and current_state in self.accept_states
